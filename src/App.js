@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import { BrowserRouter as Router, Routes, Route , Navigate } from 'react-router-dom';
+import LoginPage from './components/LoginPage';
+import SignupPage from './components/SignupPage';
+import DashboardPage from './components/DashboardPage';
 
-function App() {
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route 
+          path="/login" 
+          element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} 
+        />
+        <Route path="/signup" element={<SignupPage />} />
+        {/* Conditionally render dashboard only if logged in */}
+        <Route
+          path="/dashboard"
+          element={isLoggedIn ? (
+            <DashboardPage />
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        {/* Redirect to login if the root URL is accessed */}
+        <Route path="/" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
